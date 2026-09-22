@@ -1,0 +1,15 @@
+{
+  "show_id": "my-show",
+  "title": "Example podcast",
+  "description": "Replace with your show description.",
+  "author": "Example creator",
+  "email": "podcast@example.org",
+  "language": "zh-cn",
+  "category": "Society & Culture",
+  "explicit": false,
+  "website": "https://example.org",
+  "public_base_url": "https://cdn.example.org/my-show",
+  "bucket": "example-podcast-bucket",
+  "prefix": "my-show",
+  "region": "us-east-1"
+}
