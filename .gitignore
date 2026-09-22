@@ -1,0 +1,17 @@
+.local/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.env.*
+*.local.json
+*.m4a
+*.mp3
+*.wav
+*.caf
+dist/
+output/
+release.json
+receipt.json
+preview.xml
