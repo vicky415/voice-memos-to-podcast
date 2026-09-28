@@ -1,14 +1,19 @@
 # GitHub release
 
-Use a standalone repository. Verify authenticated GitHub owner against the requested destination. Include reusable source, synthetic examples, tests and MIT license. Exclude personal configurations, RSS snapshots, recordings, receipts and credentials.
+Use a standalone repository. Verify the authenticated GitHub owner against the requested destination. Include the reusable skill source and its documentation. Exclude personal configurations, RSS snapshots, recordings, receipts and credentials.
 
-Run `python3 -m unittest discover -s tests -v`, inspect the exact file list, then use authenticated GitHub CLI or supported browser upload. Example for a new repository, from package root:
+For v2 releases, verify that `VERSION`, the `metadata.version` value in `SKILL.md`, `CHANGELOG.md`, `RELEASE_NOTES.md`, and the GitHub release/tag all agree. Confirm that Spotify-only remains the default and that the optional X/Facebook instructions are documented as a post-publication branch rather than a replacement upload path.
+
+Run the skill validator, Python syntax checks and tests, then inspect the exact file list before pushing to the existing authenticated GitHub remote. Never create a new repository for an upgrade.
 
 ```sh
-git init -b main
-git add README.md LICENSE .gitignore requirements-self-hosted.txt examples skills tests .github
-git commit -m "Add Voice Memos podcast publishing skill"
-gh repo create OWNER/voice-memos-to-podcast --public --source=. --remote=origin --push
+python3 -m unittest discover -s tests -v
+git status
+git diff --check
+git add README.md CHANGELOG.md RELEASE_NOTES.md VERSION .gitignore skills tests
+git diff --cached
+git commit -m "feat: add X and Facebook sharing workflow for v2.0"
+git push
 ```
 
-Inspect any existing repository before updating; never force push. If authentication is missing, keep the completed local package and request sign-in, not tokens in chat. Verify the public repository and source files before claiming publication.
+Inspect the branch and remote before updating; never force push. Publish a `v2.0.0` GitHub release titled “Spotify Publishing Skill v2.0” using `RELEASE_NOTES.md`. If authentication or the remote is missing, stop after preparing the local commit and request the single needed action. Verify the remote source files and release URL before claiming publication.

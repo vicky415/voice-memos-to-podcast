@@ -13,5 +13,6 @@ __pycache__/
 dist/
 output/
 release.json
+batch*.json
 receipt.json
 preview.xml

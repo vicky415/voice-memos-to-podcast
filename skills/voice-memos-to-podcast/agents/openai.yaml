@@ -1,4 +1,4 @@
 interface:
   display_name: "Voice Memos to Podcast"
-  short_description: "Publish selected Voice Memos through podcast RSS feeds"
-  default_prompt: "Use $voice-memos-to-podcast to publish my selected recording to Spotify and Apple Podcasts."
+  short_description: "Publish Voice Memos, with optional X and Facebook sharing"
+  default_prompt: "Use $voice-memos-to-podcast to publish my selected recording. Ask me to choose Spotify only or Spotify + X + Facebook."
