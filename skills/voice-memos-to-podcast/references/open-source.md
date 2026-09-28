@@ -16,4 +16,4 @@ git commit -m "feat: add X and Facebook sharing workflow for v2.0"
 git push
 ```
 
-Inspect the branch and remote before updating; never force push. Publish a `v2.0.0` GitHub release titled “Spotify Publishing Skill v2.0” using `RELEASE_NOTES.md`. If authentication or the remote is missing, stop after preparing the local commit and request the single needed action. Verify the remote source files and release URL before claiming publication.
+Inspect the branch and remote before updating; never force push. Publish a `v2.0.0` GitHub release titled “Voice Memos to Podcast Skill v2.0” using `RELEASE_NOTES.md`. If authentication or the remote is missing, stop after preparing the local commit and request the single needed action. Verify the remote source files and release URL before claiming publication.

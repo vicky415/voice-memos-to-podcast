@@ -13,15 +13,17 @@ The social mode is per run, not a permanent account setting. It does not apply t
 
 For one or more user-selected files, sort the exact paths by filename and create a private ledger outside Git before opening Spotify. One file is one episode. Keep one ledger for the run and reuse it after interruption; never initialize a new ledger to restart already completed files. The helper rejects out-of-order progress and changed audio bytes.
 
+For a local Voice Memos folder, the helper selects only direct `.m4a` files, sorted by filename. It does not recurse into subfolders or include unrelated files:
+
 ```sh
-python3 skills/voice-memos-to-podcast/scripts/batch.py init --mode spotify-x-facebook --out '/private/path/batch.json' \
-  '/absolute/path/01.m4a' '/absolute/path/02.m4a'
+python3 skills/voice-memos-to-podcast/scripts/batch.py init --mode spotify-x-facebook \
+  --folder '/absolute/path/Voice Memos' --out '/private/path/batch.json'
 python3 skills/voice-memos-to-podcast/scripts/batch.py status --ledger '/private/path/batch.json'
 python3 skills/voice-memos-to-podcast/scripts/batch.py mark --ledger '/private/path/batch.json' \
   --index 1 --stage spotify --value attempted
 ```
 
-Use `--mode spotify-only` or omit `--mode` for the v1 route. For each episode, mark `spotify`, then `x` and `facebook` in social mode, then `done`. Mark each stage `attempted` immediately before its final button and `confirmed` only after visible success. Mark `failed` only after verifying that the action did not complete. An `attempted` stage is uncertain: inspect Spotify/X/Facebook before retrying it. If social sharing fails conclusively, mark that platform failed, continue to the other share and Done, then move to the next file. The ledger and v1 release manifests are private state, not repository files.
+Use `--mode spotify-only` or omit `--mode` for the v1 route. Explicit paths in filename order remain supported instead of `--folder`. For each episode, mark `spotify`, then `x` and `facebook` in social mode, then `done`. Mark each stage `attempted` immediately before its final button and `confirmed` only after visible success. Mark `failed` only after verifying that the action did not complete. An `attempted` stage is uncertain: inspect Spotify/X/Facebook before retrying it. If social sharing fails conclusively, mark that platform failed, continue to the other share and Done, then move to the next file. The `status` output reports totals, per-file stages and the next episode; share that concise progress with the user after each episode or failure. The ledger and v1 release manifests are private state, not repository files.
 
 1. Read the supplied RSS to identify show, host and existing GUIDs. Do not expose the owner's email. RSS is a read endpoint, not an upload endpoint.
 2. Prepare the selected local audio and manifest. Spotify supports M4A, MP3 and WAV with mono/stereo audio. Check playback when local media tools exist; rename alone does not convert codecs.

@@ -1,4 +1,4 @@
-# Spotify Publishing Skill v2.0
+# Voice Memos to Podcast Skill v2.0
 
 Version: v2.0.0
 
@@ -8,5 +8,6 @@ Version: v2.0.0
 - Added private batch progress tracking to prevent duplicate episodes and social posts after interruption.
 - Preserved Spotify-only mode as the default.
 - Improved filename-order multi-file publishing and recovery from failed or uncertain steps.
+- Added direct `.m4a` folder selection and clear per-episode progress/status output.
 
 The existing Spotify upload, RSS verification, Apple Podcasts and optional S3 publishing scripts are unchanged. Browser posting still requires authenticated sessions and cannot be verified by local automated tests.

@@ -32,6 +32,16 @@ Spotify + X + Facebook:
 
 For either mode, each selected file becomes a separate Spotify episode in filename order. In social mode, the sequence for each live episode is Spotify “Episode published!” → X Post → return to Spotify → Facebook Share/Post → return to Spotify → Done → next file. Spotify's prefilled episode link is preferred. Login or security verification may require user action; other normal browser steps proceed without repeated confirmation.
 
+To prepare a folder batch, save the selected Voice Memos as `.m4a` files in one local folder and run:
+
+```sh
+python3 skills/voice-memos-to-podcast/scripts/batch.py init \
+  --folder '/absolute/path/Voice Memos' --out '/private/path/batch.json'
+python3 skills/voice-memos-to-podcast/scripts/batch.py status --ledger '/private/path/batch.json'
+```
+
+Add `--mode spotify-x-facebook` to the `init` command for social sharing. The folder scan selects direct `.m4a` files in filename order; it does not include subfolders. Existing explicit M4A, MP3 and WAV paths still work. The agent uploads each selected file through the existing Spotify for Creators workflow; this helper prepares the order and records progress rather than bypassing Spotify's upload UI.
+
 A private batch ledger at `skills/voice-memos-to-podcast/scripts/batch.py` records attempted, confirmed, and failed steps. Resume from it after interruptions. Inspect uncertain posts before retrying, skip completed episodes, and never duplicate a social post. A failed X or Facebook step is recorded so the remaining steps can continue safely. The ledger stays outside Git.
 
 > 用 $voice-memos-to-podcast，把我保存到 Podcast Inbox 的「第十期.m4a」发布到现有节目。RSS 是……；标题……；简介……；无露骨内容；立即公开发布，并检查 Apple Podcasts 的分发状态。

@@ -23,7 +23,7 @@ Use the supplied local audio path or ask the user to share the named recording t
 
 For Spotify retain playable M4A/MP3/WAV; conversion is optional. Do not transcribe, edit or send recordings to extra services outside task scope. Obtain title, description, explicit-content choice and timing from the user or established defaults. Do not invent content checks or episode descriptions from filenames.
 
-For multiple files, sort by filename before beginning. Never merge recordings or turn one file into multiple episodes. Read [Spotify workflow](references/spotify.md) for the batch ledger and resume rules.
+For a selected local folder, use `scripts/batch.py init --folder` to select its direct `.m4a` files in filename order. Explicit file paths still support M4A/MP3/WAV. Never merge recordings or turn one file into multiple episodes. Read [Spotify workflow](references/spotify.md) for the batch ledger and resume rules.
 
 ## Execution
 
@@ -39,6 +39,8 @@ Prepare a private release manifest with `scripts/release.py prepare`; it fingerp
 Use an available authorized connector or browser for Spotify, following its environment-specific browser and upload instructions. If login, CAPTCHA or absent upload capability blocks progress, preserve preparation and state the exact user action needed. Never use unofficial session-token endpoints as a workaround.
 
 In social mode, browser pop-ups/new tabs must be allowed and authenticated sessions for X and Facebook must be available. A social failure must not trigger another Spotify publish. Record the platform-specific result, finish the other authorized share when safe, return to Spotify, click **Done** if available, and continue only when the published episode remains unambiguous.
+
+After each state change, use the ledger's `status` command to report the current filename, Spotify status, X/Facebook results when selected, and the next episode number. A confirmed social failure may be recorded and the batch may continue; social sharing never gates the Spotify publication that already succeeded.
 
 Record an attempted external action in the private batch ledger immediately before clicking Publish, Post, Share or Done. Mark it confirmed only after checking the platform result. If a result is uncertain, leave it attempted and inspect the platform before any retry; never create a duplicate episode or social post. A verified failure can be marked failed and the next authorized step can continue.
 

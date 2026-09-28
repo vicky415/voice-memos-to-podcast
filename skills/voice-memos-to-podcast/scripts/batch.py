@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import sys
 import tempfile
 
 
@@ -33,6 +34,19 @@ def ordered_audio(paths):
     return files
 
 
+def folder_audio(folder):
+    directory = Path(folder).resolve(strict=True)
+    if not directory.is_dir():
+        raise ValueError(f"Not a folder: {directory}")
+    files = sorted(
+        (path for path in directory.iterdir() if path.is_file() and path.suffix.lower() == ".m4a"),
+        key=lambda path: (path.name.casefold(), str(path)),
+    )
+    if not files:
+        raise ValueError(f"No .m4a files found directly in: {directory}")
+    return ordered_audio(files)
+
+
 def initialize(paths, mode):
     return {
         "version": 2,
@@ -47,6 +61,27 @@ def initialize(paths, mode):
                 "done": "pending",
             }
             for path in ordered_audio(paths)
+        ],
+    }
+
+
+def progress(ledger):
+    episodes = ledger["episodes"]
+    next_index = next((index for index, episode in enumerate(episodes, 1) if episode["done"] != "confirmed"), None)
+    return {
+        "total": len(episodes),
+        "completed": sum(episode["done"] == "confirmed" for episode in episodes),
+        "next_episode": next_index,
+        "episodes": [
+            {
+                "index": index,
+                "filename": Path(episode["audio"]).name,
+                "spotify": episode["spotify"],
+                "x": episode["x"],
+                "facebook": episode["facebook"],
+                "done": episode["done"],
+            }
+            for index, episode in enumerate(episodes, 1)
         ],
     }
 
@@ -123,7 +158,8 @@ def main():
     create = commands.add_parser("init")
     create.add_argument("--mode", choices=("spotify-only", "spotify-x-facebook"), default="spotify-only")
     create.add_argument("--out", type=Path, required=True)
-    create.add_argument("audio", nargs="+")
+    create.add_argument("--folder", type=Path, help="Select .m4a files directly in this folder, in filename order")
+    create.add_argument("audio", nargs="*", help="Explicit audio paths in filename order (M4A, MP3 or WAV)")
     status = commands.add_parser("status")
     status.add_argument("--ledger", type=Path, required=True)
     update = commands.add_parser("mark")
@@ -133,15 +169,21 @@ def main():
     update.add_argument("--value", choices=VALUES, required=True)
     args = parser.parse_args()
     if args.command == "init":
-        ledger = initialize(args.audio, args.mode)
+        if bool(args.folder) == bool(args.audio):
+            parser.error("Choose exactly one of --folder or explicit audio paths.")
+        ledger = initialize(folder_audio(args.folder) if args.folder else args.audio, args.mode)
         write_new(args.out, ledger)
     else:
         ledger = load(args.ledger)
         if args.command == "mark":
             mark(ledger, args.index, args.stage, args.value)
             replace(args.ledger, ledger)
-    print(json.dumps(ledger, indent=2))
+    print(json.dumps({"progress": progress(ledger), "ledger": ledger}, indent=2))
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f"Stopped: {error}", file=sys.stderr)
+        sys.exit(1)
